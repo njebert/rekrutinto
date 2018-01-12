@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace rekrutinto
 {
+    // Read data from the mongodb container
+    // Write data to the mongodb container
     public class Program
     {
         public static void Main(string[] args)
