@@ -1,6 +1,42 @@
-version: '2'
+version: '3'
+
 services:
-    # myapp:
+
+  web:
+    container_name: 'rekrutinto'
+    image: 'rekrutinto'
+    build:
+      context: .
+      #dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/rekrutinto
+    ports:
+     - "5002:80"
+    depends_on:
+    - "mongodb"
+    networks:
+      - rekrutinto-network
+
+  mongodb:
+      image: mongo:latest
+      container_name: "mongodb"
+      environment:
+        - MONGO_DATA_DIR=/data/db
+        - MONGO_LOG_DIR=/dev/null
+      volumes:
+        - /data/db:/data/db
+      ports:
+          - 27017:27017
+      command: mongod --smallfiles --logpath=/dev/null # --quiet
+      networks: 
+        - rekrutinto-network
+
+networks:
+  rekrutinto-network:
+    driver: bridge
+    
+
+      # myapp:
     #     build: .
     #     container_name: "myapp"
     #     image: debian/latest
@@ -17,14 +53,3 @@ services:
     #         - mongodb
     #     depends_on:
     #         - mongodb
-    mongodb:
-        image: mongo:latest
-        container_name: "mongodb"
-        environment:
-          - MONGO_DATA_DIR=/data/db
-          - MONGO_LOG_DIR=/dev/null
-        volumes:
-          - /data/db:/data/db
-        ports:
-            - 27017:27017
-        command: mongod --smallfiles --logpath=/dev/null # --quiet
