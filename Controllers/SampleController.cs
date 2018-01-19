@@ -17,13 +17,12 @@ namespace rekrutinto.Controllers
         {
             Console.WriteLine("Hello SampleController!");
 
-            // var connectionString = "mongodb://localhost:27017";
-            // var client = new MongoClient(connectionString);
-            // IMongoDatabase db = client.GetDatabase("sample");
-            // IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>("sample"); 
+            var connectionString = "mongodb://localhost:27017";
+            var client = new MongoClient(connectionString);
+            IMongoDatabase db = client.GetDatabase("sample");
+            IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>("Sample");
+            Console.WriteLine(string.Format("Length of sample collection: {0}", collection.AsQueryable().Count()));
 
-            // Console.WriteLine(string.Format("Length of sample collection: {0}", collection.AsQueryable().Count()));
-         
             return new string[] { "SampleValue1", "SampleValue2" };
         }
 
