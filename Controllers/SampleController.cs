@@ -19,7 +19,12 @@ namespace rekrutinto.Controllers
             Console.WriteLine("Hello SampleController!");
             try
             {
-                MongoClient client = new MongoClient("mongodb://localhost:27017/sample");
+                MongoClient client = new MongoClient(new MongoClientSettings()
+                {
+                    UseSsl = false,
+                    ConnectionMode = ConnectionMode.Standalone,
+                    Server = new MongoServerAddress("localhost",27017)
+                });
 
                 IMongoDatabase db = client.GetDatabase("sample");
 
