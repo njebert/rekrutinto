@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using rekrutinto.Models;
 
 namespace rekrutinto.Controllers
 {
@@ -16,13 +17,38 @@ namespace rekrutinto.Controllers
         public IEnumerable<string> Get()
         {
             Console.WriteLine("Hello SampleController!");
+            try
+            {
+                MongoClient client = new MongoClient("mongodb://localhost:27017/sample");
 
-            var connectionString = "mongodb://localhost:27017";
-            var client = new MongoClient(connectionString);
-            IMongoDatabase db = client.GetDatabase("sample");
-            IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>("Sample");
-            Console.WriteLine(string.Format("Length of sample collection: {0}", collection.AsQueryable().Count()));
+                IMongoDatabase db = client.GetDatabase("sample");
 
+                IMongoCollection<Developer> devCollection = db.GetCollection<Developer>("developers");
+                var developer = new Developer()
+                {
+                    CompanyName = "Spreetail",
+                    Name = "Sample Developer",
+                    KnowledgeBase = new List<Knowledge>()
+                {
+                    new Knowledge()
+                    {
+                        Language = "C#",
+                        Technology = "Reflection",
+                        Rating = "Averge"
+                    }
+                }
+                };
+                devCollection.InsertOne(developer);
+
+                var foundDeveloper = devCollection.Find(FilterDefinition<Developer>.Empty).Single();
+
+                Console.WriteLine(string.Format("Length of sample collection: {0}", devCollection.AsQueryable().Count()));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             return new string[] { "SampleValue1", "SampleValue2" };
         }
 
